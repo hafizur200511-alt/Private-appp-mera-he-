@@ -1,0 +1,6 @@
+{
+  "name": "MEGA SMM INDIA",
+  "description": "Ultra-futuristic iOS 26 liquid glass styled SMM Panel app with animated floating glowing orbs, dynamic island nav bar, UPI transactions, and full admin suite.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
