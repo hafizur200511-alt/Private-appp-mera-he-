@@ -39,40 +39,59 @@ object FirebaseService {
 
     private var profileListener: ListenerRegistration? = null
 
+    val currentAuthUser: FirebaseUser?
+        get() = try { auth.currentUser } catch (e: Exception) { null }
+
     init {
-        auth.addAuthStateListener { firebaseAuth ->
-            val user = firebaseAuth.currentUser
-            if (user != null) {
-                attachProfileListener(user.uid)
-            } else {
-                profileListener?.remove()
-                profileListener = null
-                _currentUserProfile.value = null
+        try {
+            auth.addAuthStateListener { firebaseAuth ->
+                val user = try { firebaseAuth.currentUser } catch (e: Exception) { null }
+                if (user != null) {
+                    attachProfileListener(user.uid)
+                } else {
+                    profileListener?.remove()
+                    profileListener = null
+                    _currentUserProfile.value = null
+                }
             }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to attach auth state listener", e)
         }
     }
 
     private fun attachProfileListener(uid: String) {
-        profileListener?.remove()
-        profileListener = firestore.collection("users").document(uid)
-            .addSnapshotListener { snapshot, error ->
-                if (error != null) {
-                    Log.e(TAG, "Profile listen failed", error)
-                    return@addSnapshotListener
-                }
-                if (snapshot != null && snapshot.exists()) {
-                    val profile = snapshot.toObject(UserProfile::class.java)
-                    _currentUserProfile.value = profile
-                } else {
-                    // Create default profile if not exists
-                    val authUser = auth.currentUser
-                    if (authUser != null && authUser.uid == uid) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            syncUserProfile(authUser, null, "email")
+        try {
+            profileListener?.remove()
+            profileListener = firestore.collection("users").document(uid)
+                .addSnapshotListener { snapshot, error ->
+                    if (error != null) {
+                        Log.e(TAG, "Profile listen failed", error)
+                        return@addSnapshotListener
+                    }
+                    try {
+                        if (snapshot != null && snapshot.exists()) {
+                            val profile = snapshot.toObject(UserProfile::class.java)
+                            _currentUserProfile.value = profile
+                        } else {
+                            // Create default profile if not exists
+                            val authUser = currentAuthUser
+                            if (authUser != null && authUser.uid == uid) {
+                                CoroutineScope(Dispatchers.IO).launch {
+                                    try {
+                                        syncUserProfile(authUser, null, "email")
+                                    } catch (e: Exception) {
+                                        Log.w(TAG, "Failed to create initial profile: ${e.message}")
+                                    }
+                                }
+                            }
                         }
+                    } catch (e: Exception) {
+                        Log.e(TAG, "Error handling profile snapshot", e)
                     }
                 }
-            }
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to register profile listener", e)
+        }
     }
 
     suspend fun syncUserProfile(

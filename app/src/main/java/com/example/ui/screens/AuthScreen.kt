@@ -322,49 +322,6 @@ fun AuthScreen(
                             Text("Continue with Google", color = TextWhite, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
                         }
 
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        // 1-Tap Quick Admin Access for virtual box / emulator
-                        Button(
-                            onClick = {
-                                isLoading = true
-                                errorMessage = null
-                                scope.launch {
-                                    val adminEmail = "hafizur200511@gmail.com"
-                                    val adminPass = "MegaSmm@2026"
-                                    try {
-                                        val res = FirebaseService.auth.signInWithEmailAndPassword(adminEmail, adminPass).await()
-                                        val user = res.user
-                                        if (user != null) {
-                                            FirebaseService.syncUserProfile(user, customDisplayName = "Hafizur Rahman", provider = "email")
-                                            onLoginSuccess()
-                                        }
-                                    } catch (e: Exception) {
-                                        try {
-                                            val res = FirebaseService.auth.createUserWithEmailAndPassword(adminEmail, adminPass).await()
-                                            val user = res.user
-                                            if (user != null) {
-                                                FirebaseService.syncUserProfile(user, customDisplayName = "Hafizur Rahman", provider = "email")
-                                                onLoginSuccess()
-                                            }
-                                        } catch (createEx: Exception) {
-                                            email = adminEmail
-                                            errorMessage = "Account exists. Please enter your password above."
-                                        }
-                                    } finally {
-                                        isLoading = false
-                                    }
-                                }
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = LuxuryGold.copy(alpha = 0.18f)),
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(46.dp)
-                                .border(1.dp, LuxuryGold.copy(alpha = 0.5f), RoundedCornerShape(14.dp))
-                        ) {
-                            Text("👑 1-Tap Admin Login (hafizur200511@gmail.com)", color = LuxuryGold, fontWeight = FontWeight.Bold, fontSize = 12.sp)
-                        }
-
                         Spacer(modifier = Modifier.height(16.dp))
 
                         Row(
@@ -616,7 +573,7 @@ private fun performGoogleSignIn(
             }
         } else if (!credentialSuccess) {
             onLoading(false)
-            onError("Please use 1-Tap Admin Login or Email / Password on this virtual emulator.")
+            onError("Please use Email / Password or Google Sign-In.")
         }
     }
 }

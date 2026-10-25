@@ -79,7 +79,7 @@ fun ProfileScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val authUser = FirebaseService.auth.currentUser
+    val authUser = FirebaseService.currentAuthUser
 
     val effectiveName = currentUser?.getEffectiveName(authUser) ?: "Member"
     val email = currentUser?.email?.ifBlank { authUser?.email ?: "" } ?: ""

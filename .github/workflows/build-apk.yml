@@ -89,7 +89,7 @@ jobs:
 
             #### ✨ Features:
             - **All SMM Services**: Instagram (Followers, Likes, Views), YouTube (Watchtime, Subs), Telegram, Facebook & Twitter.
-            - **Google Sign-In & 1-Tap Admin Access**: Instant entry for `hafizur200511@gmail.com`.
+            - **Secure Authentication**: Google Sign-In & Email/Password with dedicated admin dashboard for `hafizur200511@gmail.com`.
             - **Live Firebase Firestore Backend**: Real-time balance updates, orders, services, and live support chat.
             - **Dynamic UPI QR Code Generator**: Seamless automatic QR for instant balance deposits.
             - **iOS 26 Liquid Glass UI**: Ultra-premium fluid animations, chromatic caustics, and glow badges.

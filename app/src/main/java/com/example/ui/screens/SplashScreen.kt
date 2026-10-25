@@ -44,9 +44,13 @@ fun SplashScreen(
             animationSpec = tween(durationMillis = 800, easing = FastOutSlowInEasing)
         )
         // Seed initial data asynchronously in background
-        FirebaseService.seedInitialDataIfEmpty()
+        try {
+            FirebaseService.seedInitialDataIfEmpty()
+        } catch (e: Exception) {
+            android.util.Log.w("SplashScreen", "Seed error: ${e.message}")
+        }
         delay(600)
-        val user = FirebaseService.auth.currentUser
+        val user = FirebaseService.currentAuthUser
         onSplashFinished(user != null)
     }
 

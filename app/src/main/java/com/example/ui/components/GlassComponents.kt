@@ -93,12 +93,19 @@ fun AnimatedGlowingBackground(content: @Composable () -> Unit) {
             .background(BackgroundDark)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
+            if (size.width <= 1f || size.height <= 1f) return@Canvas
+
+            val r1 = (size.width * 0.75f).coerceAtLeast(10f)
+            val r2 = (size.width * 0.85f).coerceAtLeast(10f)
+            val r3 = (size.width * 0.80f).coerceAtLeast(10f)
+            val r4 = (size.width * 0.55f).coerceAtLeast(10f)
+
             // Liquid Orb 1: Electric Cyan Caustic Glow (Top Right)
             drawCircle(
                 brush = Brush.radialGradient(
                     colors = listOf(AccentCyan.copy(alpha = pulseAlpha), Color(0x110072FE), Color.Transparent),
                     center = Offset(size.width * 0.85f + animOffset1, size.height * 0.10f + animOffset2 * 0.5f),
-                    radius = size.width * 0.75f
+                    radius = r1
                 )
             )
             // Liquid Orb 2: Deep Sapphire Blue Core (Center Left)
@@ -106,7 +113,7 @@ fun AnimatedGlowingBackground(content: @Composable () -> Unit) {
                 brush = Brush.radialGradient(
                     colors = listOf(PrimaryBlue.copy(alpha = 0.30f), Color(0x1800F5FF), Color.Transparent),
                     center = Offset(size.width * 0.12f + animOffset2, size.height * 0.42f + animOffset1 * 0.4f),
-                    radius = size.width * 0.85f
+                    radius = r2
                 )
             )
             // Liquid Orb 3: Radiant Emerald Glow (Bottom Center)
@@ -114,7 +121,7 @@ fun AnimatedGlowingBackground(content: @Composable () -> Unit) {
                 brush = Brush.radialGradient(
                     colors = listOf(EmeraldGreen.copy(alpha = pulseAlpha * 0.85f), Color(0x1110B981), Color.Transparent),
                     center = Offset(size.width * 0.5f + animOffset1 * 0.5f, size.height * 0.86f + animOffset2 * 0.6f),
-                    radius = size.width * 0.80f
+                    radius = r3
                 )
             )
             // Liquid Orb 4: Subtle Ultraviolet Shimmer (Bottom Right)
@@ -122,7 +129,7 @@ fun AnimatedGlowingBackground(content: @Composable () -> Unit) {
                 brush = Brush.radialGradient(
                     colors = listOf(Color(0x28833AB4), Color(0x10FD1D1D), Color.Transparent),
                     center = Offset(size.width * 0.90f - animOffset2, size.height * 0.65f),
-                    radius = size.width * 0.55f
+                    radius = r4
                 )
             )
             // Top specular caustic sheen line

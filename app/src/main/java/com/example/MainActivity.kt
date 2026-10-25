@@ -46,7 +46,7 @@ class MainActivity : ComponentActivity() {
 fun MainAppContent() {
     var currentScreen by remember { mutableStateOf<AppScreen>(AppScreen.Splash) }
     val userProfile by FirebaseService.currentUserProfile.collectAsState()
-    val authUser = FirebaseService.auth.currentUser
+    val authUser = FirebaseService.currentAuthUser
     val isAdmin = userProfile?.isUserAdmin(authUser) == true
 
     // System Back Press handling
